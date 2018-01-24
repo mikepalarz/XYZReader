@@ -57,6 +57,8 @@ public class DrawInsetsFrameLayout extends FrameLayout {
     private void init(Context context, AttributeSet attrs, int defStyle) {
         final TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.DrawInsetsFrameLayout, defStyle, 0);
+
+        // TODO: Java assertions.... Interesting! Keep this in mind for your own development
         assert a != null;
 
         mInsetBackground = a.getDrawable(R.styleable.DrawInsetsFrameLayout_insetBackground);
