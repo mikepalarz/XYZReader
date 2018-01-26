@@ -28,6 +28,7 @@ public class ArticleDetailActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     // TODO: Make sure to add a Toolbar to this activity and setSupportActionBar within onCreate()
+    // TODO: Make sure to add up navigation and remove the "custom" up navigation in the activity's layout
 
     private Cursor mCursor;
     private long mStartId;
