@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
@@ -177,6 +178,8 @@ public class ArticleDetailFragment extends Fragment implements
         actionBar.setDisplayHomeAsUpEnabled(true);
 
 //        updateStatusBar();
+
+        ((CoordinatorLayout)mRootView).setStatusBarBackgroundColor(getContext().getColor(R.color.colorPrimaryDark));
 
         return mRootView;
     }
