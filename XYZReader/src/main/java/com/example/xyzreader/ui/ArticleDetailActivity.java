@@ -32,9 +32,6 @@ public class ArticleDetailActivity extends AppCompatActivity
 
     private static final String TAG = ArticleDetailActivity.class.getSimpleName();
 
-    // TODO: Make sure to add a Toolbar to this activity and setSupportActionBar within onCreate()
-    // TODO: Make sure to add up navigation and remove the "custom" up navigation in the activity's layout
-
     private Cursor mCursor;
     private long mStartId;
 
@@ -117,21 +114,6 @@ public class ArticleDetailActivity extends AppCompatActivity
 
 
     }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        Log.i(TAG, "onOptionsItemSelected() being called");
-//        switch (item.getItemId()) {
-//            case android.R.id.home:
-//                NavUtils.navigateUpFromSameTask(this);
-////                FragmentManager manager = getFragmentManager();
-////                manager.popBackStack();
-//                return true;
-//            default:
-//                return true;
-//        }
-//
-//    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {

@@ -1,4 +1,10 @@
 <resources>
+    <!--Dimensions for the ArticleListActivity-->
+
+    <!--Dimensions for list items within ArticleListActivity-->
+    <dimen name="card_view_resting_elevation">2dp</dimen>
+    <dimen name="card_view_response_elevation">8dp</dimen>
+
     <!-- detail -->
     <dimen name="detail_title_text_size">32sp</dimen>
     <dimen name="detail_body_text_size">22sp</dimen>

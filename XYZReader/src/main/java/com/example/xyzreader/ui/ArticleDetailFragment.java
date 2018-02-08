@@ -70,6 +70,7 @@ public class ArticleDetailFragment extends Fragment implements
     private boolean mIsCard = false;
 //    private int mStatusBarFullOpacityBottom;
     private Toolbar mToolbar;
+    private ImageView mUpButton;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
     // Use default locale format
@@ -103,7 +104,7 @@ public class ArticleDetailFragment extends Fragment implements
         mIsCard = getResources().getBoolean(R.bool.detail_is_card);
 //        mStatusBarFullOpacityBottom = getResources().getDimensionPixelSize(
 //                R.dimen.detail_card_top_margin);
-//        setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
     }
 
     public ArticleDetailActivity getActivityCast() {
@@ -161,43 +162,25 @@ public class ArticleDetailFragment extends Fragment implements
         });
 
         bindViews();
-        setHasOptionsMenu(true);
 
         mToolbar = (Toolbar) mRootView.findViewById(R.id.fragment_article_detail_toolbar);
 
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
+        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+
+        mUpButton = (ImageView) mRootView.findViewById(R.id.action_up);
+        mUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                NavUtils.navigateUpFromSameTask(getActivity());
+            public void onClick(View view) {
+                ((AppCompatActivity) getActivity()).onSupportNavigateUp();
             }
         });
 
-        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
-
-        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
 //        updateStatusBar();
 
-        ((CoordinatorLayout)mRootView).setStatusBarBackgroundColor(getContext().getColor(R.color.colorPrimaryDark));
 
         return mRootView;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Log.i(TAG, "onOptionsItemSelected() being called");
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(getActivity());
-//                FragmentManager manager = getFragmentManager();
-//                manager.popBackStack();
-                return true;
-            default:
-                return true;
-
-        }
-
     }
 
     //    private void updateStatusBar() {
