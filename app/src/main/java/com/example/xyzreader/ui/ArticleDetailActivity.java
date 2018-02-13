@@ -47,6 +47,13 @@ public class ArticleDetailActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /*
+         This piece is critical. It ensures that our activity's content will appear beneath the
+         status bar. It allows the Window that contains this activity's content to be laid out
+         beneath screen decorations such as the status bar. This is exactly what we'd like to have
+         in order to have a transparent status bar.
+         */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
@@ -59,8 +66,18 @@ public class ArticleDetailActivity extends AppCompatActivity
         mPagerAdapter = new MyPagerAdapter(getFragmentManager());
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mPagerAdapter);
+
+        // Applies a margin between the pages within the ViewPager. The margin has a width of 1dp.
         mPager.setPageMargin((int) TypedValue
                 .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics()));
+
+        /*
+         The margin's color is actually black with an alpha value (which stores the transparency)
+         of approximately 13% so that it appears gray once displayed. The alpha value is the first
+         two values within the hexadecimal number that are used when defining the ColorDrawable,
+         which is 0x22. For more details, see this SO post:
+         https://stackoverflow.com/questions/5445085/understanding-colors-on-android-six-characters
+         */
         mPager.setPageMarginDrawable(new ColorDrawable(0x22000000));
 
         mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
