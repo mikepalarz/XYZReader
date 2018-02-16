@@ -80,7 +80,15 @@ public class ArticleDetailActivity extends AppCompatActivity
          */
         mPager.setPageMarginDrawable(new ColorDrawable(0x22000000));
 
+        /*
+         Setting a SimpleOnPageChangeListener for us to be able to handle events when the user
+         swipes left/right to change the page.
+         */
         mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            /*
+             Called whenever the scroll state changes. In this case, we animate the up button
+              depending on the scroll state.
+             */
             @Override
             public void onPageScrollStateChanged(int state) {
                 super.onPageScrollStateChanged(state);
@@ -89,18 +97,24 @@ public class ArticleDetailActivity extends AppCompatActivity
 //                        .setDuration(300);
             }
 
+            /*
+             Called when a new page has been selected. In this case, we set mSelectedItemId to
+             reflect the newly selected page.
+             */
             @Override
             public void onPageSelected(int position) {
                 if (mCursor != null) {
                     mCursor.moveToPosition(position);
                 }
                 mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
-//                updateUpButtonPosition();
             }
         });
 
-//        mUpButtonContainer = findViewById(R.id.up_container);
-//
+        /*
+        Setting an OnClickListener to the up button so that the user is returned back to
+        ArticleListActivity when the up button is clicked.
+         */
+
 //        mUpButton = findViewById(R.id.action_up);
 //        mUpButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -108,20 +122,12 @@ public class ArticleDetailActivity extends AppCompatActivity
 //                onSupportNavigateUp();
 //            }
 //        });
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            mUpButtonContainer.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
-//                @Override
-//                public WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
-//                    view.onApplyWindowInsets(windowInsets);
-//                    mTopInset = windowInsets.getSystemWindowInsetTop();
-//                    mUpButtonContainer.setTranslationY(mTopInset);
-//                    updateUpButtonPosition();
-//                    return windowInsets;
-//                }
-//            });
-//        }
 
+
+        /*
+        If this activity has just started, we'll set mStartId to the article ID that started this
+        activity. mSelectedItemId will be set to mStartId as well.
+         */
         if (savedInstanceState == null) {
             if (getIntent() != null && getIntent().getData() != null) {
                 mStartId = ItemsContract.Items.getItemId(getIntent().getData());
@@ -164,18 +170,6 @@ public class ArticleDetailActivity extends AppCompatActivity
         mPagerAdapter.notifyDataSetChanged();
     }
 
-//    public void onUpButtonFloorChanged(long itemId, ArticleDetailFragment fragment) {
-//        if (itemId == mSelectedItemId) {
-//            mSelectedItemUpButtonFloor = fragment.getUpButtonFloor();
-//            updateUpButtonPosition();
-//        }
-//    }
-
-//    private void updateUpButtonPosition() {
-//        int upButtonNormalBottom = mTopInset + mUpButton.getHeight();
-//        mUpButton.setTranslationY(Math.min(mSelectedItemUpButtonFloor - upButtonNormalBottom, 0));
-//    }
-
     private class MyPagerAdapter extends FragmentStatePagerAdapter {
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -184,11 +178,6 @@ public class ArticleDetailActivity extends AppCompatActivity
         @Override
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
             super.setPrimaryItem(container, position, object);
-            ArticleDetailFragment fragment = (ArticleDetailFragment) object;
-//            if (fragment != null) {
-//                mSelectedItemUpButtonFloor = fragment.getUpButtonFloor();
-//                updateUpButtonPosition();
-//            }
         }
 
         @Override
