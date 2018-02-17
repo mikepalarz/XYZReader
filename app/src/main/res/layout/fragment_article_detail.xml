@@ -95,23 +95,28 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin" />
 
-            <ImageButton
-                android:id="@+id/action_up"
-                android:layout_width="56dp"
-                android:layout_height="?actionBarSize"
-                android:background="?selectableItemBackgroundBorderless"
+            <FrameLayout
+                android:background="@android:color/transparent"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
                 android:layout_marginTop="24dp"
-                app:layout_collapseMode="pin"
-                android:src="@drawable/ic_arrow_back" />
+                app:layout_collapseMode="pin">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:src="@drawable/logo"
-                android:contentDescription="@string/app_name"
-                android:layout_marginStart="48dp"
-                app:layout_collapseMode="pin" />
+                <ImageButton
+                    android:id="@+id/action_up"
+                    android:layout_width="56dp"
+                    android:layout_height="match_parent"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_arrow_back" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/logo"
+                    android:contentDescription="@string/app_name"
+                    android:layout_marginStart="48dp" />
+
+            </FrameLayout>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
