@@ -199,9 +199,6 @@ public class ArticleDetailFragment extends Fragment implements
 
         if (mCursor != null) {
 
-            /*
-            TODO: Interesting.... The root view is being animated. Possibly worth looking into.
-             */
             mRootView.setAlpha(0);
             mRootView.setVisibility(View.VISIBLE);
             mRootView.animate().alpha(1);
@@ -215,6 +212,7 @@ public class ArticleDetailFragment extends Fragment implements
                                 publishedDate.getTime(),
                                 System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
                                 DateUtils.FORMAT_ABBREV_ALL).toString()
+                                // TODO: perhaps switch the author name back to white?
 //                                + " by <font color='#ffffff'>"
                                 + " by <font color="+ colorInt + ">"
                                 + mCursor.getString(ArticleLoader.Query.AUTHOR)

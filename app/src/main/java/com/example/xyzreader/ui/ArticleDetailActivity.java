@@ -36,13 +36,9 @@ public class ArticleDetailActivity extends AppCompatActivity
     private long mStartId;
 
     private long mSelectedItemId;
-//    private int mSelectedItemUpButtonFloor = Integer.MAX_VALUE;
-//    private int mTopInset;
 
     private ViewPager mPager;
     private MyPagerAdapter mPagerAdapter;
-//    private View mUpButtonContainer;
-//    private View mUpButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,9 +88,6 @@ public class ArticleDetailActivity extends AppCompatActivity
             @Override
             public void onPageScrollStateChanged(int state) {
                 super.onPageScrollStateChanged(state);
-//                mUpButton.animate()
-//                        .alpha((state == ViewPager.SCROLL_STATE_IDLE) ? 1f : 0f)
-//                        .setDuration(300);
             }
 
             /*
@@ -109,20 +102,6 @@ public class ArticleDetailActivity extends AppCompatActivity
                 mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
             }
         });
-
-        /*
-        Setting an OnClickListener to the up button so that the user is returned back to
-        ArticleListActivity when the up button is clicked.
-         */
-
-//        mUpButton = findViewById(R.id.action_up);
-//        mUpButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                onSupportNavigateUp();
-//            }
-//        });
-
 
         /*
         If this activity has just started, we'll set mStartId to the article ID that started this

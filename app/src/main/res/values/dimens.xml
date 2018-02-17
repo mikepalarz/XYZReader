@@ -1,11 +1,28 @@
 <resources>
+    <!--Macro dimensions-->
+    <dimen name="keyline_screen_edge_left">16dp</dimen>
+    <dimen name="keyline_screen_edge_right">16dp</dimen>
+    <dimen name="keyline_inner_left">72dp</dimen>
+    <dimen name="status_bar_height">24dp</dimen>
+
+    <dimen name="app_bar_height_minimum">56dp</dimen>
+    <!--The expanded height of the app bar is simply 3x the minimum height value.
+        In a way, I am using the app bar height as an incremental size via:
+        https://material.io/guidelines/layout/metrics-keylines.html#metrics-keylines-sizing-by-increments
+        However, I am not applying this to all of my UI elements, only to the app bar.-->
+    <dimen name="app_bar_height_expanded">168dp</dimen>
+
+    <dimen name="app_bar_title_bottom_margin">20dp</dimen>
+    <dimen name="toolbar_height">@dimen/app_bar_height_minimum</dimen>
+    <dimen name="baseline_grid">8dp</dimen>
+
     <!--Dimensions for the ArticleListActivity-->
 
     <!--Dimensions for list items within ArticleListActivity-->
     <dimen name="card_view_resting_elevation">2dp</dimen>
     <dimen name="card_view_response_elevation">8dp</dimen>
 
-    <!-- detail -->
+    <!-- Dimensions for the ArticleDetailFragment -->
     <dimen name="detail_title_text_size">32sp</dimen>
     <dimen name="detail_body_text_size">22sp</dimen>
     <item name="detail_body_line_spacing_multiplier" format="float" type="fraction">1.25</item>

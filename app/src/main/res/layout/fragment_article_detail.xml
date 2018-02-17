@@ -1,7 +1,4 @@
-<!--TODO: See if you can move the AppBarLayout to the activity's layout instead.-->
-
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/draw_insets_frame_layout"
     android:layout_width="match_parent"
@@ -22,26 +19,26 @@
                 android:id="@+id/meta_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#333"
                 android:layout_gravity="bottom"
+                android:layout_marginBottom="@dimen/detail_metabar_vert_padding"
+                android:background="#333"
                 android:orientation="vertical"
+                android:paddingBottom="@dimen/detail_metabar_vert_padding"
                 android:paddingLeft="@dimen/detail_inner_horiz_margin"
                 android:paddingRight="@dimen/detail_inner_horiz_margin"
-                android:paddingTop="@dimen/detail_metabar_vert_padding"
-                android:paddingBottom="@dimen/detail_metabar_vert_padding"
-                android:layout_marginBottom="@dimen/detail_metabar_vert_padding">
+                android:paddingTop="@dimen/detail_metabar_vert_padding">
 
                 <TextView
                     android:id="@+id/article_title"
                     style="?android:attr/textAppearanceLarge"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/detail_metabar_title_bottom_padding"
                     android:fontFamily="sans-serif-condensed"
+                    android:lineSpacingMultiplier="0.9"
+                    android:paddingBottom="@dimen/detail_metabar_title_bottom_padding"
                     android:textColor="?android:attr/textColorPrimary"
-                    android:textStyle="bold"
                     android:textSize="@dimen/detail_title_text_size"
-                    android:lineSpacingMultiplier="0.9" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/article_byline"
@@ -71,8 +68,8 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="240dp"
-        android:minHeight="?attr/actionBarSize">
+        android:layout_height="@dimen/app_bar_height_expanded"
+        android:minHeight="@dimen/app_bar_height_minimum">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
@@ -92,31 +89,35 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/fragment_article_detail_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="@dimen/toolbar_height"
+                android:layout_marginLeft="@dimen/keyline_screen_edge_left"
                 app:layout_collapseMode="pin" />
 
             <FrameLayout
-                android:background="@android:color/transparent"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_marginTop="24dp"
+                android:layout_height="@dimen/app_bar_height_minimum"
+                android:background="@android:color/transparent"
                 app:layout_collapseMode="pin">
 
                 <ImageButton
                     android:id="@+id/action_up"
-                    android:layout_width="56dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/toolbar_height"
                     android:background="?selectableItemBackgroundBorderless"
+                    android:paddingLeft="@dimen/keyline_screen_edge_left"
                     android:src="@drawable/ic_arrow_back" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/logo"
-                    android:contentDescription="@string/app_name"
-                    android:layout_marginStart="48dp" />
-
             </FrameLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="@dimen/keyline_inner_left"
+                android:layout_marginBottom="@dimen/app_bar_title_bottom_margin"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/logo"
+                app:layout_collapseMode="pin" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -124,12 +125,12 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/share_fab"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginRight="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
-        android:src="@drawable/ic_share"
-        android:contentDescription="@string/action_share"/>
+        android:layout_marginRight="@dimen/fab_margin"
+        android:contentDescription="@string/action_share"
+        android:src="@drawable/ic_share" />
 
 </android.support.design.widget.CoordinatorLayout>
