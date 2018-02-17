@@ -95,14 +95,14 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin" />
 
-            <ImageButton
-                android:id="@+id/action_up"
-                android:layout_width="56dp"
-                android:layout_height="?actionBarSize"
-                android:background="?selectableItemBackgroundBorderless"
-                android:layout_marginTop="24dp"
-                app:layout_collapseMode="pin"
-                android:src="@drawable/ic_arrow_back" />
+            <!--<ImageButton-->
+                <!--android:id="@+id/action_up"-->
+                <!--android:layout_width="56dp"-->
+                <!--android:layout_height="?actionBarSize"-->
+                <!--android:background="?selectableItemBackgroundBorderless"-->
+                <!--android:layout_marginTop="24dp"-->
+                <!--app:layout_collapseMode="pin"-->
+                <!--android:src="@drawable/ic_arrow_back" />-->
 
             <ImageView
                 android:layout_width="wrap_content"

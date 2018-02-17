@@ -62,7 +62,6 @@ public class ArticleDetailFragment extends Fragment implements
     private ImageView mPhotoView;
     private boolean mIsCard = false;
     private Toolbar mToolbar;
-    private ImageView mUpButton;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
     // Use default locale format
@@ -132,28 +131,6 @@ public class ArticleDetailFragment extends Fragment implements
 
         bindViews();
 
-        /*
-         Here we set our toolbar as the ActionBar of the fragment in order to disable the title
-         that automatically appears for the current fragment.
-         */
-        mToolbar = (Toolbar) mRootView.findViewById(R.id.fragment_article_detail_toolbar);
-
-        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
-        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-
-        /*
-         In this case, we're setting an OnClickListener to the custom up button so that the user is
-         brought back to ArticleListActivity when it is clicked.
-         */
-        mUpButton = (ImageView) mRootView.findViewById(R.id.action_up);
-        mUpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((AppCompatActivity) getActivity()).onSupportNavigateUp();
-            }
-        });
-
         return mRootView;
     }
 
@@ -199,9 +176,6 @@ public class ArticleDetailFragment extends Fragment implements
 
         if (mCursor != null) {
 
-            /*
-            TODO: Interesting.... The root view is being animated. Possibly worth looking into.
-             */
             mRootView.setAlpha(0);
             mRootView.setVisibility(View.VISIBLE);
             mRootView.animate().alpha(1);
@@ -215,6 +189,7 @@ public class ArticleDetailFragment extends Fragment implements
                                 publishedDate.getTime(),
                                 System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
                                 DateUtils.FORMAT_ABBREV_ALL).toString()
+                                // TODO: Maybe switch the color of the author's name back to white?
 //                                + " by <font color='#ffffff'>"
                                 + " by <font color="+ colorInt + ">"
                                 + mCursor.getString(ArticleLoader.Query.AUTHOR)

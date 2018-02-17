@@ -9,16 +9,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowInsets;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -36,13 +32,10 @@ public class ArticleDetailActivity extends AppCompatActivity
     private long mStartId;
 
     private long mSelectedItemId;
-//    private int mSelectedItemUpButtonFloor = Integer.MAX_VALUE;
-//    private int mTopInset;
 
     private ViewPager mPager;
     private MyPagerAdapter mPagerAdapter;
-//    private View mUpButtonContainer;
-//    private View mUpButton;
+    private View mUpButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,9 +85,9 @@ public class ArticleDetailActivity extends AppCompatActivity
             @Override
             public void onPageScrollStateChanged(int state) {
                 super.onPageScrollStateChanged(state);
-//                mUpButton.animate()
-//                        .alpha((state == ViewPager.SCROLL_STATE_IDLE) ? 1f : 0f)
-//                        .setDuration(300);
+                mUpButton.animate()
+                        .alpha((state == ViewPager.SCROLL_STATE_IDLE) ? 1f : 0f)
+                        .setDuration(300);
             }
 
             /*
@@ -115,13 +108,13 @@ public class ArticleDetailActivity extends AppCompatActivity
         ArticleListActivity when the up button is clicked.
          */
 
-//        mUpButton = findViewById(R.id.action_up);
-//        mUpButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                onSupportNavigateUp();
-//            }
-//        });
+        mUpButton = findViewById(R.id.action_up);
+        mUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onSupportNavigateUp();
+            }
+        });
 
 
         /*
