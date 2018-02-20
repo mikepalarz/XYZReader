@@ -1,16 +1,12 @@
 package com.example.xyzreader.ui;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,8 +14,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.NavUtils;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -31,7 +27,6 @@ import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -63,6 +58,7 @@ public class ArticleDetailFragment extends Fragment implements
     private boolean mIsCard = false;
     private Toolbar mToolbar;
     private ImageView mUpButton;
+    private ImageView mLogo;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
     // Use default locale format
@@ -153,6 +149,50 @@ public class ArticleDetailFragment extends Fragment implements
                 ((AppCompatActivity) getActivity()).onSupportNavigateUp();
             }
         });
+
+        /*
+        This is a fancy little adjustment that I've made here. Without this, the logo will always
+        be partially covered by the window insets because of 3 reasons:
+
+            1. The way that the UI flags are being adjusted within ArticleDetailActivity
+            2. Because I've set the width and height of the logo to wrap_content
+            3. A bottom margin of 20dp has been applied to the logo in order to abide to the
+                Material Design specs for the app bar.
+
+        The simple solution to this issue would be to just decrease the height and width of the logo
+        so that it would be contained within the window insets. However, I knew that there must
+        be a fancier way to accomplish this.
+
+        I've set an OnOffsetChangedListener to the AppBarLayout to detect when the app bar is fully
+        expanded or collapsed. If the app bar is collapsed, then the bottom margin is removed.
+        Otherwise, it is reapplied so that we're still following the MD specs.
+         */
+        mLogo = (ImageView) mRootView.findViewById(R.id.fragment_article_detail_logo);
+        final CollapsingToolbarLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) mLogo.getLayoutParams();
+
+        AppBarLayout appBarLayout = (AppBarLayout) mRootView.findViewById(R.id.fragment_article_detail_app_bar_layout);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+
+                // If toolbar is collapsed, we'll remove the bottom margin
+                if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
+                    layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, layoutParams.rightMargin, 0);
+                    mLogo.setLayoutParams(layoutParams);
+                }
+
+                /*
+                Otherwise, we'll add the bottom margin back in. I could have kept just as a plain
+                else statement. However, scrolling started to feel jittery since this was being
+                called each time the app bar is being expanded. The additional if() has been added
+                to ensure that the bottom margin is only added once.
+                 */
+                else if (layoutParams.bottomMargin != getLogoBottomMargin()) {
+                    layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, layoutParams.rightMargin, getLogoBottomMargin());
+                    mLogo.setLayoutParams(layoutParams);
+                }
+            }
+            });
 
         return mRootView;
     }
@@ -296,6 +336,14 @@ public class ArticleDetailFragment extends Fragment implements
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         mCursor = null;
         bindViews();
+    }
+
+    /*
+    A helper method which simply returns the bottom margin that should be applied to the logo.
+     */
+    private int getLogoBottomMargin() {
+
+        return getResources().getDimensionPixelSize(R.dimen.app_bar_logo_bottom_margin);
     }
 
 }

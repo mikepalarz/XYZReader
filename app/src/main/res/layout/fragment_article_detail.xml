@@ -67,6 +67,7 @@
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/fragment_article_detail_app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_bar_height_expanded"
         android:minHeight="@dimen/app_bar_height_minimum">
@@ -110,11 +111,12 @@
             </FrameLayout>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/fragment_article_detail_logo"
+                android:layout_width="@dimen/logo_width"
+                android:layout_height="@dimen/logo_height"
                 android:layout_gravity="bottom"
-                android:layout_marginStart="@dimen/keyline_inner_left"
-                android:layout_marginBottom="@dimen/app_bar_title_bottom_margin"
+                android:layout_marginBottom="@dimen/app_bar_logo_bottom_margin"
+                android:layout_marginLeft="@dimen/keyline_inner_left"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/logo"
                 app:layout_collapseMode="pin" />

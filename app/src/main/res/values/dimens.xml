@@ -4,6 +4,8 @@
     <dimen name="keyline_screen_edge_right">16dp</dimen>
     <dimen name="keyline_inner_left">72dp</dimen>
     <dimen name="status_bar_height">24dp</dimen>
+    <item name="match_parent" type="dimen">-1</item>
+    <item name="wrap_content" type="dimen">-2</item>
 
     <dimen name="app_bar_height_minimum">56dp</dimen>
     <!--The expanded height of the app bar is simply 3x the minimum height value.
@@ -12,7 +14,9 @@
         However, I am not applying this to all of my UI elements, only to the app bar.-->
     <dimen name="app_bar_height_expanded">168dp</dimen>
 
-    <dimen name="app_bar_title_bottom_margin">20dp</dimen>
+    <dimen name="logo_width">@dimen/wrap_content</dimen>
+    <dimen name="logo_height">@dimen/wrap_content</dimen>
+    <dimen name="app_bar_logo_bottom_margin">20dp</dimen>
     <dimen name="toolbar_height">@dimen/app_bar_height_minimum</dimen>
     <dimen name="baseline_grid">8dp</dimen>
 
