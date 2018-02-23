@@ -13,7 +13,6 @@
         https://material.io/guidelines/layout/metrics-keylines.html#metrics-keylines-sizing-by-increments
         However, I am not applying this to all of my UI elements, only to the app bar.-->
     <dimen name="app_bar_height_expanded">168dp</dimen>
-
     <dimen name="logo_width">@dimen/wrap_content</dimen>
     <dimen name="logo_height">@dimen/wrap_content</dimen>
     <dimen name="app_bar_logo_bottom_margin">20dp</dimen>
@@ -23,6 +22,10 @@
     <!--Dimensions for the ArticleListActivity-->
 
     <!--Dimensions for list items within ArticleListActivity-->
+    <dimen name="card_view_margin">8dp</dimen>
+    <dimen name="card_view_text_padding_top">24dp</dimen>
+    <dimen name="card_view_text_padding_bottom">24dp</dimen>
+    <dimen name="card_view_text_padding_left_right">16dp</dimen>
     <dimen name="card_view_resting_elevation">2dp</dimen>
     <dimen name="card_view_response_elevation">8dp</dimen>
 

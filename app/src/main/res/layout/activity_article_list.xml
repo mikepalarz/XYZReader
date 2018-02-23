@@ -16,8 +16,6 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:paddingBottom="28dp"
-            android:paddingLeft="@dimen/keyline_screen_edge_left"
-            android:paddingRight="@dimen/keyline_screen_edge_right"
             android:scrollbarStyle="outsideOverlay" />
 
     </android.support.v4.widget.SwipeRefreshLayout>

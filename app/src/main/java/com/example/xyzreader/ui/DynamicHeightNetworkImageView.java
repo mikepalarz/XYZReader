@@ -6,7 +6,14 @@ import android.util.AttributeSet;
 import com.android.volley.toolbox.NetworkImageView;
 
 public class DynamicHeightNetworkImageView extends NetworkImageView {
-    private float mAspectRatio = 1.5f;
+
+    /*
+    mAspectRatio has been slightly adjusted. It was previously set to 1.5f, which corresponds to a
+    3:2 aspect ratio. However, this view is exclusively used within the CardView of the list activity.
+    The MD specs recommend that a CardView's media content have an aspect ratio of 16:9 and not
+    3:2. Therefore, mAspectRatio has been adjusted to follow that recommendation.
+     */
+    private float mAspectRatio = 1.78f;
 
     public DynamicHeightNetworkImageView(Context context) {
         super(context);
