@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -45,6 +46,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     private Toolbar mToolbar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
+    private int mColumnCount;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
     // Use default locale format
@@ -76,11 +78,18 @@ public class ArticleListActivity extends AppCompatActivity implements
         // Removing the textual title from the app bar since we already have a logo image
         actionBar.setDisplayShowTitleEnabled(false);
 
-//        final View toolbarContainerView = findViewById(R.id.toolbar_container);
-
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mColumnCount = getResources().getInteger(R.integer.list_column_count);
+
+        /*
+        In order to have equal spacing along the edges of the screen as well as between the
+        child views of the RecyclerView, an EqualOffsetItemDecoration is applied to the RecyclerView.
+         */
+        EqualOffsetItemDecoration itemDecoration = new EqualOffsetItemDecoration(this, R.dimen.card_view_margin, mColumnCount);
+        mRecyclerView.addItemDecoration(itemDecoration);
+
         getLoaderManager().initLoader(0, null, this);
 
         if (savedInstanceState == null) {
@@ -121,13 +130,21 @@ public class ArticleListActivity extends AppCompatActivity implements
         mRecyclerView.setAdapter(adapter);
 
         /*
-        TODO: This is where the layout manager and the column count of the list activity is being
-        set. You may need to adjust this later on for the tablet.
+        The layout manager of the RecyclerView has been switched from being a
+        StaggeredGridLayoutManager to simply a GridLayoutManager. This was done so that we more
+        closely follow the MD specs regarding card collections:
+
+        https://material.io/guidelines/components/cards.html#cards-content-blocks
+
+        In the spec, we are advised to use 8dp for both the margins and gutters of our card
+        collection. This won't be achievable if a StaggeredGridLayoutManager is used since the
+        gutters and margins will always be changing for each column and/or row. Therefore,
+        the layout manager was changed.
         */
-        int columnCount = getResources().getInteger(R.integer.list_column_count);
-        StaggeredGridLayoutManager sglm =
-                new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(sglm);
+        GridLayoutManager gridLayoutManager =
+                new GridLayoutManager(this, mColumnCount, GridLayoutManager.VERTICAL, false);
+
+        mRecyclerView.setLayoutManager(gridLayoutManager);
     }
 
     @Override
