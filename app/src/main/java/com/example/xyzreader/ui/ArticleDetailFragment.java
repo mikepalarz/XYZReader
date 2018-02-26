@@ -235,7 +235,7 @@ public class ArticleDetailFragment extends Fragment implements
           the MD specs. Initial thought is that this isn't following the specs and that it needs to
           be changed.
          */
-        bodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
+//        bodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
 
         if (mCursor != null) {
 
@@ -246,14 +246,12 @@ public class ArticleDetailFragment extends Fragment implements
             Date publishedDate = parsePublishedDate();
             if (!publishedDate.before(START_OF_EPOCH.getTime())) {
 
-                int colorInt = ContextCompat.getColor(getActivity(), R.color.textColorSecondary);
+                int colorInt = ContextCompat.getColor(getActivity(), R.color.white87Percent);
                 bylineView.setText(Html.fromHtml(
                         DateUtils.getRelativeTimeSpanString(
                                 publishedDate.getTime(),
                                 System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
                                 DateUtils.FORMAT_ABBREV_ALL).toString()
-                                // TODO: perhaps switch the author name back to white?
-//                                + " by <font color='#ffffff'>"
                                 + " by <font color="+ colorInt + ">"
                                 + mCursor.getString(ArticleLoader.Query.AUTHOR)
                                 + "</font>"));
@@ -267,11 +265,20 @@ public class ArticleDetailFragment extends Fragment implements
 
             }
             /*
-            This is where the body text is being set. It may be necessary at some point to adjust
-            this text to only include the first 500 characters. However, this should only be done
-            if the app becomes buggy for some unknown reason.
+            The text which is obtained from the JSON data is adjusted slightly by removing some of
+             the escape characters which are directly contained within the text. This adjustment
+             is done so that the body text is formatted in a nice, presentable way. It also ensures
+             that we are displaying 40-60 characters per line, which is the range recommended by
+             the MD spec for typography:
+
+             https://material.io/guidelines/style/typography.html#typography-other-typographic-guidelines
              */
-            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
+            String bodyText = mCursor.getString(ArticleLoader.Query.BODY)
+                    .replaceAll("\r\n\r\n", "\n\n")
+                    .replaceAll("\r\n", " ")
+                    .replaceAll("    ", "");
+
+            bodyView.setText(bodyText);
 
             // This is where the image is loaded.
             ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
@@ -286,7 +293,7 @@ public class ArticleDetailFragment extends Fragment implements
                                  Is the right color being used? Worth looking into.
                                  */
                                 Palette p = Palette.generate(bitmap, 12);
-                                mMutedColor = p.getDarkMutedColor(0xFF333333);
+                                mMutedColor = p.getVibrantColor(0xFF333333);
                                 mPhotoView.setImageBitmap(imageContainer.getBitmap());
 
                                 // This is where we set the background color of the meta bar

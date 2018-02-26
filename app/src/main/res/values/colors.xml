@@ -24,7 +24,16 @@
     <color name="colorAccent">#FFC107</color>
     <color name="textColorPrimary">#212121</color>
     <color name="textColorSecondary">#757575</color>
-    <color name="theme_divider_color">#BDBDBD</color>
-    <color name="theme_text_icons">#FFFFFF</color>
-    <color name="ltgray">#ffe0e0e0</color>
+    <!--This color has been added for text elements in the detail activity/fragment. An alpha
+    value of 87% has been used according to the guidance in the MD specs:
+
+    https://material.io/guidelines/style/typography.html#typography-other-typographic-guidelines
+
+    It is used on text that has the "Headline" and "Subheading" MD style applied. This color is used
+    for text where there are dark/high contrast backgrounds (such as the meta bar) and a white color
+    is used in order to make the text more legible. Although the MD specs outline alpha values for
+    black text, I assumed that the same alpha values would apply for white text as well. The
+    MD specs also provide guidance on when it is appropriate to switch from black to white text
+    (such as when dark backgrounds are present).-->
+    <color name="white87Percent">#DFFFFFFF</color>
 </resources>

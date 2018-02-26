@@ -1,6 +1,6 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/draw_insets_frame_layout"
+    android:id="@+id/fragment_article_detail_coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -15,6 +15,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <!--TODO: Change the padding here. It probably doesn't follow MD specs.-->
             <LinearLayout
                 android:id="@+id/meta_bar"
                 android:layout_width="match_parent"
@@ -24,43 +25,60 @@
                 android:background="#333"
                 android:orientation="vertical"
                 android:paddingBottom="@dimen/detail_metabar_vert_padding"
-                android:paddingLeft="@dimen/detail_inner_horiz_margin"
-                android:paddingRight="@dimen/detail_inner_horiz_margin"
+                android:paddingLeft="@dimen/keyline_screen_edge_left"
+                android:paddingRight="@dimen/keyline_screen_edge_right"
                 android:paddingTop="@dimen/detail_metabar_vert_padding">
+
+                <!--TODO: Check the MD specs for some of the attributes that you're setting here-->
+                <!--<TextView-->
+                    <!--android:id="@+id/article_title"-->
+                    <!--style="?android:attr/textAppearanceLarge"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:fontFamily="sans-serif-condensed"-->
+                    <!--android:lineSpacingMultiplier="0.9"-->
+                    <!--android:paddingBottom="@dimen/detail_metabar_title_bottom_padding"-->
+                    <!--android:textColor="?android:attr/textColorPrimary"-->
+                    <!--android:textSize="@dimen/detail_title_text_size"-->
+                    <!--android:textStyle="bold" />-->
 
                 <TextView
                     android:id="@+id/article_title"
-                    style="?android:attr/textAppearanceLarge"
+                    style="@style/TextStyle.Detail.Title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-condensed"
-                    android:lineSpacingMultiplier="0.9"
-                    android:paddingBottom="@dimen/detail_metabar_title_bottom_padding"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:textSize="@dimen/detail_title_text_size"
-                    android:textStyle="bold" />
+                    android:paddingBottom="@dimen/detail_metabar_title_bottom_padding" />
 
                 <TextView
                     android:id="@+id/article_byline"
-                    style="?android:attr/textAppearanceSmall"
+                    style="@style/TextStyle.Detail.ByLine"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="?android:attr/textColorSecondary" />
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
+            <!--<TextView-->
+                <!--android:id="@+id/article_body"-->
+                <!--style="?android:attr/textAppearanceMedium"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="@dimen/detail_inner_horiz_margin"-->
+                <!--android:layout_marginRight="@dimen/detail_inner_horiz_margin"-->
+                <!--android:lineSpacingMultiplier="@fraction/detail_body_line_spacing_multiplier"-->
+                <!--android:paddingBottom="@dimen/detail_body_bottom_margin"-->
+                <!--android:textColor="?android:attr/textColorPrimary"-->
+                <!--android:textColorLink="@color/colorAccent"-->
+                <!--android:textSize="@dimen/detail_body_text_size" />-->
+
             <TextView
                 android:id="@+id/article_body"
-                style="?android:attr/textAppearanceMedium"
+                style="@style/TextAppearance.AppCompat.Body1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/detail_inner_horiz_margin"
-                android:layout_marginRight="@dimen/detail_inner_horiz_margin"
                 android:lineSpacingMultiplier="@fraction/detail_body_line_spacing_multiplier"
-                android:paddingBottom="@dimen/detail_body_bottom_margin"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textColorLink="@color/colorAccent"
-                android:textSize="@dimen/detail_body_text_size" />
+                android:layout_marginLeft="@dimen/keyline_screen_edge_left"
+                android:layout_marginRight="@dimen/keyline_screen_edge_right"
+                android:textColorLink="@color/colorAccent" />
 
         </LinearLayout>
 

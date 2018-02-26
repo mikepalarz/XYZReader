@@ -19,8 +19,6 @@
     <dimen name="toolbar_height">@dimen/app_bar_height_minimum</dimen>
     <dimen name="baseline_grid">8dp</dimen>
 
-    <!--Dimensions for the ArticleListActivity-->
-
     <!--Dimensions for list items within ArticleListActivity-->
     <dimen name="card_view_margin">8dp</dimen>
     <dimen name="card_view_text_padding_top">24dp</dimen>
@@ -30,12 +28,7 @@
     <dimen name="card_view_response_elevation">8dp</dimen>
 
     <!-- Dimensions for the ArticleDetailFragment -->
-    <dimen name="detail_title_text_size">32sp</dimen>
-    <dimen name="detail_body_text_size">22sp</dimen>
     <item name="detail_body_line_spacing_multiplier" format="float" type="fraction">1.25</item>
-
-    <dimen name="fab_elevation">2dp</dimen>
-    <dimen name="fab_press_translation_z">6dp</dimen>
     <dimen name="fab_margin">24dp</dimen>
 
 </resources>

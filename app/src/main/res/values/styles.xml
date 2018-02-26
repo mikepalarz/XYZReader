@@ -25,8 +25,24 @@
         <item name="android:textColorSecondary">@color/textColorSecondary</item>
     </style>
 
-    <style name="Theme.Bacon.Detail">
-        <!--<item name="android:statusBarColor">@android:color/transparent</item>-->
+    <style name="TextStyle.CardView.Title" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">4</item>
+    </style>
+
+    <style name="TextStyle.CardView.Subtitle" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/textColorSecondary</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">2</item>
+    </style>
+
+    <style name="TextStyle.Detail.Title" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textColor">@color/white87Percent</item>
+    </style>
+
+    <style name="TextStyle.Detail.ByLine" parent="TextAppearance.AppCompat.Subhead">
+        <item name="android:textColor">@color/white87Percent</item>
     </style>
 
 </resources>
