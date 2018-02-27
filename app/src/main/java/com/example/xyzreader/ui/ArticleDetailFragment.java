@@ -264,21 +264,8 @@ public class ArticleDetailFragment extends Fragment implements
                                 + "</font>"));
 
             }
-            /*
-            The text which is obtained from the JSON data is adjusted slightly by removing some of
-             the escape characters which are directly contained within the text. This adjustment
-             is done so that the body text is formatted in a nice, presentable way. It also ensures
-             that we are displaying 40-60 characters per line, which is the range recommended by
-             the MD spec for typography:
 
-             https://material.io/guidelines/style/typography.html#typography-other-typographic-guidelines
-             */
-            String bodyText = mCursor.getString(ArticleLoader.Query.BODY)
-                    .replaceAll("\r\n\r\n", "\n\n")
-                    .replaceAll("\r\n", " ")
-                    .replaceAll("    ", "");
-
-            bodyView.setText(bodyText);
+            bodyView.setText(mCursor.getString(ArticleLoader.Query.BODY));
 
             // This is where the image is loaded.
             ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
