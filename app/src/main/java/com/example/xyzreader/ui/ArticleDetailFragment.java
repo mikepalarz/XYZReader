@@ -230,13 +230,6 @@ public class ArticleDetailFragment extends Fragment implements
         bylineView.setMovementMethod(new LinkMovementMethod());
         TextView bodyView = (TextView) mRootView.findViewById(R.id.article_body);
 
-        /*
-         TODO: Here is where the font of the body text is defined. Check to see if this is following
-          the MD specs. Initial thought is that this isn't following the specs and that it needs to
-          be changed.
-         */
-//        bodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
-
         if (mCursor != null) {
 
             mRootView.setAlpha(0);
@@ -274,11 +267,6 @@ public class ArticleDetailFragment extends Fragment implements
                         public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
                             Bitmap bitmap = imageContainer.getBitmap();
                             if (bitmap != null) {
-                                /*
-                                TODO: We're using the Palette class to extract the prominent colors
-                                 from the image here. However, are we following the MD spec on this?
-                                 Is the right color being used? Worth looking into.
-                                 */
                                 Palette p = Palette.generate(bitmap, 12);
                                 mMutedColor = p.getVibrantColor(0xFF333333);
                                 mPhotoView.setImageBitmap(imageContainer.getBitmap());
