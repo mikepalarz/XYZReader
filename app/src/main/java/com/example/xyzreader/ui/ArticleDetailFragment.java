@@ -12,7 +12,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.ActivityCompat;
@@ -50,7 +53,8 @@ public class ArticleDetailFragment extends Fragment implements
     private static final String TAG = "ArticleDetailFragment";
 
     public static final String ARG_ITEM_ID = "item_id";
-    public static final String ARG_TRANSITION_ID = "photo_position";
+    public static final String ARG_CURRENT_TRANSITION_ID = "current_transition_id";
+    public static final String ARG_STARTING_TRANSITION_ID = "starting_transition_id";
 
     private Cursor mCursor;
     private long mItemId;
@@ -62,7 +66,10 @@ public class ArticleDetailFragment extends Fragment implements
     private Toolbar mToolbar;
     private ImageView mUpButton;
     private ImageView mLogo;
-    private int mTransitionID;
+    // A reference to the current article position, if the user swiped articles
+    private int mCurrentTransitionID;
+    // A reference to the starting article position, when the article detail activity was launched
+    private int mStartingTransitionID;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
     // Use default locale format
@@ -77,10 +84,13 @@ public class ArticleDetailFragment extends Fragment implements
     public ArticleDetailFragment() {
     }
 
-    public static ArticleDetailFragment newInstance(long itemId, int photoPosition) {
+    public static ArticleDetailFragment newInstance(long itemId, int currentTransitionID, int startingTransitionID) {
         Bundle arguments = new Bundle();
         arguments.putLong(ARG_ITEM_ID, itemId);
-        arguments.putInt(ARG_TRANSITION_ID, photoPosition);
+        // We store the current article position
+        arguments.putInt(ARG_CURRENT_TRANSITION_ID, currentTransitionID);
+        // ...as well as the starting article position.
+        arguments.putInt(ARG_STARTING_TRANSITION_ID, startingTransitionID);
         ArticleDetailFragment fragment = new ArticleDetailFragment();
         fragment.setArguments(arguments);
         return fragment;
@@ -89,12 +99,16 @@ public class ArticleDetailFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle arguments = getArguments();
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-            mItemId = getArguments().getLong(ARG_ITEM_ID);
+        if (arguments.containsKey(ARG_ITEM_ID)) {
+            mItemId = arguments.getLong(ARG_ITEM_ID);
         }
-        if (getArguments().containsKey(ARG_TRANSITION_ID)) {
-            mTransitionID = getArguments().getInt(ARG_TRANSITION_ID);
+        if (arguments.containsKey(ARG_CURRENT_TRANSITION_ID)) {
+            mCurrentTransitionID = arguments.getInt(ARG_CURRENT_TRANSITION_ID);
+        }
+        if (arguments.containsKey(ARG_STARTING_TRANSITION_ID)) {
+            mStartingTransitionID = arguments.getInt(ARG_STARTING_TRANSITION_ID);
         }
 
         // This is where we determine if the fragment is a card, which is used for the tablet layout
@@ -123,8 +137,7 @@ public class ArticleDetailFragment extends Fragment implements
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
 
         mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
-        ViewCompat.setTransitionName(mPhotoView, getString(R.string.transition_name) + mTransitionID);
-        Log.i(TAG, "Transition name: " + ViewCompat.getTransitionName(mPhotoView));
+        ViewCompat.setTransitionName(mPhotoView, getString(R.string.transition_name) + mCurrentTransitionID);
 
         mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -282,18 +295,27 @@ public class ArticleDetailFragment extends Fragment implements
                                 mMutedColor = p.getVibrantColor(0xFF333333);
                                 mPhotoView.setImageBitmap(imageContainer.getBitmap());
 
-                                mPhotoView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                                    @Override
-                                    public boolean onPreDraw() {
-                                        mPhotoView.getViewTreeObserver().removeOnPreDrawListener(this);
-                                        // Start the postponed transition
-                                        ActivityCompat.startPostponedEnterTransition(getActivity());
-                                        return true;
-                                    }
-                                });
+                                /*
+                                We only want to start the enter transition if these values are the
+                                same. In other words, we only want the transition to occur if the
+                                article that started the detail activity is the same as the one that's
+                                currently being shown. One of the main reason's this precaution was
+                                added is because Alex Lockwood's project was taking the same approach.
+                                 */
+                                if (mCurrentTransitionID == mStartingTransitionID) {
+                                    mPhotoView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                                        @Override
+                                        public boolean onPreDraw() {
+                                            mPhotoView.getViewTreeObserver().removeOnPreDrawListener(this);
+                                            // Start the postponed transition
+                                            ActivityCompat.startPostponedEnterTransition(getActivity());
+                                            return true;
+                                        }
+                                    });
+                                }
 
                                 // This is where we set the background color of the meta bar
-                                mRootView.findViewById(R.id.meta_bar)
+                                mRootView.findViewById(R.id.fragment_article_details_meta_bar)
                                         .setBackgroundColor(mMutedColor);
                             }
                         }
@@ -334,15 +356,6 @@ public class ArticleDetailFragment extends Fragment implements
 
         bindViews();
 
-//        mPhotoView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-//            @Override
-//            public boolean onPreDraw() {
-//                mPhotoView.getViewTreeObserver().removeOnPreDrawListener(this);
-//                // Start the postponed transition
-//                ActivityCompat.startPostponedEnterTransition(getActivity());
-//                return true;
-//            }
-//        });
     }
 
     @Override
@@ -357,6 +370,27 @@ public class ArticleDetailFragment extends Fragment implements
     private int getLogoBottomMargin() {
 
         return getResources().getDimensionPixelSize(R.dimen.app_bar_logo_bottom_margin);
+    }
+
+    /**
+     * Returns the shared element that should be transitioned back to the previous Activity,
+     * or null if the view is not visible on the screen.
+     */
+    @Nullable
+    ImageView getArticlePhoto() {
+        if (isViewInBounds(getActivity().getWindow().getDecorView(), mPhotoView)) {
+            return mPhotoView;
+        }
+        return null;
+    }
+
+    /**
+     * Returns true if {@param view} is contained within {@param container}'s bounds.
+     */
+    private static boolean isViewInBounds(@NonNull View container, @NonNull View view) {
+        Rect containerBounds = new Rect();
+        container.getHitRect(containerBounds);
+        return view.getLocalVisibleRect(containerBounds);
     }
 
 }

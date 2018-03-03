@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <android.support.v4.widget.NestedScrollView
-        android:id="@+id/scrollview"
+        android:id="@+id/fragment_article_detail_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -16,7 +16,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/meta_bar"
+                android:id="@+id/fragment_article_details_meta_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"

@@ -18,8 +18,14 @@
 <resources>
 
     <style name="Theme.Bacon" parent="Base.Theme.Bacon">
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    </style>
+
+    <style name="Theme.Bacon.Detail">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowEnterTransition">@transition/details_transition</item>
+        <item name="android:windowExitTransition">@transition/details_transition</item>
     </style>
 
 </resources>

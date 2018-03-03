@@ -3,26 +3,28 @@ package com.example.xyzreader.ui;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.LoaderManager;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
-import android.support.v4.app.NavUtils;
+import android.support.v4.app.SharedElementCallback;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.TypedValue;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowInsets;
+import android.widget.ImageView;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * An activity representing a single Article detail screen, letting you swipe between articles.
@@ -31,6 +33,7 @@ public class ArticleDetailActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = ArticleDetailActivity.class.getSimpleName();
+    private static final String STATE_CURRENT_ARTICLE_POSITION = "state_current_article_position";
 
     private Cursor mCursor;
     private long mStartId;
@@ -40,10 +43,67 @@ public class ArticleDetailActivity extends AppCompatActivity
     private ViewPager mPager;
     private MyPagerAdapter mPagerAdapter;
 
+    // A reference to the current article detail fragment that is being displayed
+    private ArticleDetailFragment mCurrentFragment;
+    // The article position that was used to launch this activity
+    private int mStartingArticlePosition;
+    /*
+    The most up-to-date article position. This value will be the same as mStartingArticlePosition,
+    but may change if the user swipes between articles.
+     */
+    private int mCurrentArticlePosition;
+
+    // A boolean used to determine if the user is returning to the list activity
+    private boolean mIsReturning;
+
+    // A boolean used to determine if the device is API 21+
+    private boolean mIsLollipop;
+
+    /*
+    Another callback which is used to correct the return animation to the article list activity,
+    if needed.
+     */
+    private final SharedElementCallback mSharedElementCallback = new SharedElementCallback() {
+        @Override
+        public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+            // If we are returning back to the list activity
+            if (mIsReturning) {
+                ImageView sharedElement = mCurrentFragment.getArticlePhoto();
+                if (sharedElement == null) {
+                    // If shared element is null, then it has been scrolled off screen and
+                    // no longer visible. In this case we cancel the shared element transition by
+                    // removing the shared element from the shared elements map.
+                    names.clear();
+                    sharedElements.clear();
+                }
+                else if (mCurrentArticlePosition != mStartingArticlePosition){
+                    // If the user has swiped to a different ViewPager page, then we need to
+                    // remove the old shared element and replace it with the new shared element
+                    // that should be transitioned instead.
+                    names.clear();
+                    sharedElements.clear();
+                    String newTransitionName = ViewCompat.getTransitionName(sharedElement);
+                    names.add(newTransitionName);
+                    sharedElements.put(newTransitionName, sharedElement);
+                }
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /*
+        We postpone the enter transition of the activity. This transition isn't actually started
+        until we're certain that the article image is being displayed, which is actually determined
+        within the ArticleDetailFragment class.
+         */
         supportPostponeEnterTransition();
+
+        // Again, we set our SharedElementCallback
+        setEnterSharedElementCallback(mSharedElementCallback);
+        mIsLollipop = getResources().getBoolean(R.bool.is_api_21);
 
         /*
          This piece is critical. It ensures that our activity's content will appear beneath the
@@ -51,7 +111,7 @@ public class ArticleDetailActivity extends AppCompatActivity
          beneath screen decorations such as the status bar. This is exactly what we'd like to have
          in order to have a transparent status bar.
          */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (mIsLollipop) {
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
                             View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
@@ -101,8 +161,17 @@ public class ArticleDetailActivity extends AppCompatActivity
                     mCursor.moveToPosition(position);
                 }
                 mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
+
+                /*
+                This is where we actually change the value of mCurrentArticlePosition since this is
+                where we detect that the user has swiped between articles.
+                 */
+                mCurrentArticlePosition = position;
             }
         });
+
+        mStartingArticlePosition = getIntent().getIntExtra(ArticleListActivity.EXTRA_STARTING_ARTICLE_POSITION, 0);
+        mIsReturning = false;
 
         /*
         If this activity has just started, we'll set mStartId to the article ID that started this
@@ -113,9 +182,43 @@ public class ArticleDetailActivity extends AppCompatActivity
                 mStartId = ItemsContract.Items.getItemId(getIntent().getData());
                 mSelectedItemId = mStartId;
             }
+
+            mCurrentArticlePosition = mStartingArticlePosition;
         }
 
+        /*
+        If the user rotates the device, we want to be sure that they are still being shown the
+        currect article.
+         */
+        else {
+            mCurrentArticlePosition = savedInstanceState.getInt(STATE_CURRENT_ARTICLE_POSITION);
+        }
 
+        mPager.setCurrentItem(mCurrentArticlePosition);
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(STATE_CURRENT_ARTICLE_POSITION, mCurrentArticlePosition);
+    }
+
+    /*
+    This method gets called once the exit transition of this activity is started. At this point,
+    we want to store the values of mStartingArticlePosition and mCurrentArticlePosition and pass
+    those values along to the list activity. These values are later on retrieved within the list
+    activity's onActivityReenter().
+     */
+    @Override
+    public void finishAfterTransition() {
+        mIsReturning = true;
+        Intent data = new Intent();
+        data.putExtra(ArticleListActivity.EXTRA_STARTING_ARTICLE_POSITION, mStartingArticlePosition);
+        data.putExtra(ArticleListActivity.EXTRA_CURRENT_ARTICLE_POSITION, mCurrentArticlePosition);
+        setResult(RESULT_OK, data);
+
+        super.finishAfterTransition();
     }
 
     @Override
@@ -158,12 +261,23 @@ public class ArticleDetailActivity extends AppCompatActivity
         @Override
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
             super.setPrimaryItem(container, position, object);
+            // Set mCurrentFragment to the fragment which is being currently displayed
+            mCurrentFragment = (ArticleDetailFragment) object;
         }
 
         @Override
         public Fragment getItem(int position) {
             mCursor.moveToPosition(position);
-            return ArticleDetailFragment.newInstance(mCursor.getLong(ArticleLoader.Query._ID), position);
+            /*
+            In this case, we pass both the adapter position as well as mStartingArticlePosition to
+            the fragment so that we later on ensure that the shared element transition is done
+            only if the adapter position and mStartingArticlePosition are the same. In other words,
+            we ensure that the shared element transition only occurs for the article that launched
+            the details activity.
+             */
+            return ArticleDetailFragment.newInstance(mCursor.getLong(ArticleLoader.Query._ID),
+                    position,
+                    mStartingArticlePosition);
         }
 
         @Override
