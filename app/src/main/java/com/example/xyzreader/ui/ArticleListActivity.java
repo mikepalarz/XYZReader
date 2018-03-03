@@ -45,6 +45,9 @@ public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = ArticleListActivity.class.toString();
+    public static final String ARG_STARTING_ARTICLE_POSITION = "starting_article_position";
+    public static final String ARG_CURRENT_ARTICLE_POSITION = "current_article_position";
+
     private Toolbar mToolbar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
@@ -169,8 +172,7 @@ public class ArticleListActivity extends AppCompatActivity implements
                             Intent.ACTION_VIEW,
                             ItemsContract.Items.buildItemUri(getItemId(adapterPosition))
                     );
-
-                    Log.i(TAG, "Transition name: " + ViewCompat.getTransitionName(vh.thumbnailView));
+                    detailsIntent.putExtra(ARG_STARTING_ARTICLE_POSITION, adapterPosition);
 
                     ActivityOptionsCompat activityOptionsCompat =
                             ActivityOptionsCompat.makeSceneTransitionAnimation(
@@ -223,9 +225,9 @@ public class ArticleListActivity extends AppCompatActivity implements
             holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
 
             // Setting the transition name of the image within the ViewHolder
-            String transitionName = getResources().getString(R.string.transition_name);
-            holder.thumbnailView.setTransitionName(transitionName + mCursor.getLong(ArticleLoader.Query._ID));
-
+            String transitionName = getResources().getString(R.string.transition_name) + position;
+            holder.thumbnailView.setTransitionName(transitionName);
+            holder.thumbnailView.setTag(transitionName);
 
         }
 

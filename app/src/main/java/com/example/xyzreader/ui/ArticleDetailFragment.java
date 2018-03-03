@@ -6,14 +6,12 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -52,7 +50,7 @@ public class ArticleDetailFragment extends Fragment implements
     private static final String TAG = "ArticleDetailFragment";
 
     public static final String ARG_ITEM_ID = "item_id";
-    public static final String ARG_PHOTO_POSITION = "item_id";
+    public static final String ARG_TRANSITION_ID = "photo_position";
 
     private Cursor mCursor;
     private long mItemId;
@@ -64,6 +62,7 @@ public class ArticleDetailFragment extends Fragment implements
     private Toolbar mToolbar;
     private ImageView mUpButton;
     private ImageView mLogo;
+    private int mTransitionID;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
     // Use default locale format
@@ -78,9 +77,10 @@ public class ArticleDetailFragment extends Fragment implements
     public ArticleDetailFragment() {
     }
 
-    public static ArticleDetailFragment newInstance(long itemId) {
+    public static ArticleDetailFragment newInstance(long itemId, int photoPosition) {
         Bundle arguments = new Bundle();
         arguments.putLong(ARG_ITEM_ID, itemId);
+        arguments.putInt(ARG_TRANSITION_ID, photoPosition);
         ArticleDetailFragment fragment = new ArticleDetailFragment();
         fragment.setArguments(arguments);
         return fragment;
@@ -92,6 +92,9 @@ public class ArticleDetailFragment extends Fragment implements
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             mItemId = getArguments().getLong(ARG_ITEM_ID);
+        }
+        if (getArguments().containsKey(ARG_TRANSITION_ID)) {
+            mTransitionID = getArguments().getInt(ARG_TRANSITION_ID);
         }
 
         // This is where we determine if the fragment is a card, which is used for the tablet layout
@@ -120,7 +123,7 @@ public class ArticleDetailFragment extends Fragment implements
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
 
         mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
-        ViewCompat.setTransitionName(mPhotoView, getString(R.string.transition_name) + mItemId);
+        ViewCompat.setTransitionName(mPhotoView, getString(R.string.transition_name) + mTransitionID);
         Log.i(TAG, "Transition name: " + ViewCompat.getTransitionName(mPhotoView));
 
         mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
