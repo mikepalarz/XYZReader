@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -172,8 +174,22 @@ public class ArticleListActivity extends AppCompatActivity implements
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(Intent.ACTION_VIEW,
-                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
+                    int adapterPosition = vh.getAdapterPosition();
+
+                    Intent detailsIntent = new Intent(
+                            Intent.ACTION_VIEW,
+                            ItemsContract.Items.buildItemUri(getItemId(adapterPosition))
+                    );
+
+                    Log.i(TAG, "Transition name: " + ViewCompat.getTransitionName(vh.thumbnailView));
+
+                    ActivityOptionsCompat activityOptionsCompat =
+                            ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                    ArticleListActivity.this,
+                                    vh.thumbnailView,
+                                    vh.thumbnailView.getTransitionName());
+
+                    startActivity(detailsIntent, activityOptionsCompat.toBundle());
                 }
             });
             return vh;
@@ -216,6 +232,10 @@ public class ArticleListActivity extends AppCompatActivity implements
             // Keep this in mind. Here is where they set the aspect ratio of the thumbnail
             // for the list items
             holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
+
+            // S
+            String transitionName = getResources().getString(R.string.transition_name);
+            holder.thumbnailView.setTransitionName(transitionName + mCursor.getLong(ArticleLoader.Query._ID));
         }
 
         @Override

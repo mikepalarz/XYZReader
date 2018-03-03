@@ -43,6 +43,7 @@ public class ArticleDetailActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        supportPostponeEnterTransition();
 
         /*
          This piece is critical. It ensures that our activity's content will appear beneath the

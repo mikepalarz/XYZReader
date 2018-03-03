@@ -9,4 +9,7 @@
 
     <string name="up">Up</string>
 
+
+    <!--String to be used for shared element transitions-->
+    <string name="transition_name">transition</string>
 </resources>

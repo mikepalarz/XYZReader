@@ -13,11 +13,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
@@ -29,6 +32,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -48,6 +52,7 @@ public class ArticleDetailFragment extends Fragment implements
     private static final String TAG = "ArticleDetailFragment";
 
     public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_PHOTO_POSITION = "item_id";
 
     private Cursor mCursor;
     private long mItemId;
@@ -115,6 +120,8 @@ public class ArticleDetailFragment extends Fragment implements
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
 
         mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
+        ViewCompat.setTransitionName(mPhotoView, getString(R.string.transition_name) + mItemId);
+        Log.i(TAG, "Transition name: " + ViewCompat.getTransitionName(mPhotoView));
 
         mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,6 +201,7 @@ public class ArticleDetailFragment extends Fragment implements
             }
             });
 
+
         return mRootView;
     }
 
@@ -271,6 +279,16 @@ public class ArticleDetailFragment extends Fragment implements
                                 mMutedColor = p.getVibrantColor(0xFF333333);
                                 mPhotoView.setImageBitmap(imageContainer.getBitmap());
 
+                                mPhotoView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                                    @Override
+                                    public boolean onPreDraw() {
+                                        mPhotoView.getViewTreeObserver().removeOnPreDrawListener(this);
+                                        // Start the postponed transition
+                                        ActivityCompat.startPostponedEnterTransition(getActivity());
+                                        return true;
+                                    }
+                                });
+
                                 // This is where we set the background color of the meta bar
                                 mRootView.findViewById(R.id.meta_bar)
                                         .setBackgroundColor(mMutedColor);
@@ -312,6 +330,16 @@ public class ArticleDetailFragment extends Fragment implements
         }
 
         bindViews();
+
+//        mPhotoView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+//            @Override
+//            public boolean onPreDraw() {
+//                mPhotoView.getViewTreeObserver().removeOnPreDrawListener(this);
+//                // Start the postponed transition
+//                ActivityCompat.startPostponedEnterTransition(getActivity());
+//                return true;
+//            }
+//        });
     }
 
     @Override
