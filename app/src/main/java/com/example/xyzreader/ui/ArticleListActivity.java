@@ -87,9 +87,9 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         /*
         In order to have equal spacing along the edges of the screen as well as between the
-        child views of the RecyclerView, an EqualOffsetItemDecoration is applied to the RecyclerView.
+        child views of the RecyclerView, a StaggeredGridItemDecoration is applied to the RecyclerView.
          */
-        EqualOffsetItemDecoration itemDecoration = new EqualOffsetItemDecoration(this, R.dimen.card_view_margin, mColumnCount);
+        StaggeredGridItemDecoration itemDecoration = new StaggeredGridItemDecoration(this, R.dimen.card_view_margin, mColumnCount);
         mRecyclerView.addItemDecoration(itemDecoration);
 
         getLoaderManager().initLoader(0, null, this);
@@ -131,22 +131,10 @@ public class ArticleListActivity extends AppCompatActivity implements
         adapter.setHasStableIds(true);
         mRecyclerView.setAdapter(adapter);
 
-        /*
-        The layout manager of the RecyclerView has been switched from being a
-        StaggeredGridLayoutManager to simply a GridLayoutManager. This was done so that we more
-        closely follow the MD specs regarding card collections:
+        StaggeredGridLayoutManager staggeredGridLayoutManager =
+                new StaggeredGridLayoutManager(mColumnCount, StaggeredGridLayoutManager.VERTICAL);
 
-        https://material.io/guidelines/components/cards.html#cards-content-blocks
-
-        In the spec, we are advised to use 8dp for both the margins and gutters of our card
-        collection. This won't be achievable if a StaggeredGridLayoutManager is used since the
-        gutters and margins will always be changing for each column and/or row. Therefore,
-        the layout manager was changed.
-        */
-        GridLayoutManager gridLayoutManager =
-                new GridLayoutManager(this, mColumnCount, GridLayoutManager.VERTICAL, false);
-
-        mRecyclerView.setLayoutManager(gridLayoutManager);
+        mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
     }
 
     @Override
@@ -170,6 +158,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = getLayoutInflater().inflate(R.layout.list_item_article, parent, false);
+            view.setTag(mCursor.getString(ArticleLoader.Query.TITLE));
             final ViewHolder vh = new ViewHolder(view);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -233,9 +222,11 @@ public class ArticleListActivity extends AppCompatActivity implements
             // for the list items
             holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
 
-            // S
+            // Setting the transition name of the image within the ViewHolder
             String transitionName = getResources().getString(R.string.transition_name);
             holder.thumbnailView.setTransitionName(transitionName + mCursor.getLong(ArticleLoader.Query._ID));
+
+
         }
 
         @Override
