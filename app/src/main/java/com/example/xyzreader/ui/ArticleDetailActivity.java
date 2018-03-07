@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.app.SharedElementCallback;
 import android.support.v4.view.ViewCompat;
@@ -18,6 +19,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -170,6 +172,53 @@ public class ArticleDetailActivity extends AppCompatActivity
             }
         });
 
+        /*
+        A PageTransformer is set onto the ViewPager so that we can add animations to some of our
+        views when the user swipes in between pages. Creates a really nice visual polish.
+         */
+        mPager.setPageTransformer(false, new ViewPager.PageTransformer() {
+            @Override
+            public void transformPage(View page, float position) {
+
+                /*
+                We obtain references to all of the views that we'd like to animate. We use
+                page.findViewById() since the views are actually stored within the fragment and
+                not within this activity.
+
+                The page is a reference to the page that is currently being displayed. The position
+                is a reference to how close to the center the current page is, where -1 indicates
+                that the page is completely scrolled off to the left edge of the screen and +1
+                indicates that the page is scrolled off to the right edge.
+                 */
+                ImageView photoView = (ImageView) page.findViewById(R.id.photo);
+                TextView title = (TextView) page.findViewById(R.id.article_title);
+                TextView byline = (TextView) page.findViewById(R.id.article_byline);
+                TextView body = (TextView) page.findViewById(R.id.article_body);
+                ImageView logo = (ImageView) page.findViewById(R.id.fragment_article_detail_logo);
+                FloatingActionButton fab = (FloatingActionButton) page.findViewById(R.id.share_fab);
+
+                int pageWidth = page.getWidth();
+
+                // As long as the current page is visible, we will apply our animations
+                if (position >= -1 && position <= 1) {
+
+                    // photoView will have a parallax effect applied
+                    photoView.setAlpha(1 - Math.abs(position));
+                    photoView.setTranslationX((float) (-position * 0.5 * pageWidth));
+
+                    title.setTranslationX(position * pageWidth);
+                    byline.setTranslationX(position * pageWidth);
+                    body.setTranslationX(position * pageWidth);
+                    logo.setTranslationX((float) (position * 0.7 * pageWidth));
+
+                    // FAB will rotate, pretty neat!
+                    fab.setRotation(360 * position);
+                    fab.setTranslationX((float) (position * 1.5 * pageWidth));
+                }
+
+            }
+        });
+
         mStartingArticlePosition = getIntent().getIntExtra(ArticleListActivity.EXTRA_STARTING_ARTICLE_POSITION, 0);
         mIsReturning = false;
 
@@ -188,7 +237,7 @@ public class ArticleDetailActivity extends AppCompatActivity
 
         /*
         If the user rotates the device, we want to be sure that they are still being shown the
-        currect article.
+        current article.
          */
         else {
             mCurrentArticlePosition = savedInstanceState.getInt(STATE_CURRENT_ARTICLE_POSITION);

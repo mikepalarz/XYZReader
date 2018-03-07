@@ -20,6 +20,7 @@
     <style name="Theme.Bacon" parent="Base.Theme.Bacon">
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowActivityTransitions">true</item>
     </style>
 
     <style name="Theme.Bacon.Detail">
