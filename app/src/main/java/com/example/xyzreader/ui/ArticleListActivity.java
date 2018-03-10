@@ -8,7 +8,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
 import android.support.v4.view.ViewCompat;
@@ -160,6 +164,27 @@ public class ArticleListActivity extends AppCompatActivity implements
         actionBar.setDisplayShowTitleEnabled(false);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                NetworkInfo ni = cm.getActiveNetworkInfo();
+                if (ni == null || !ni.isConnected()) {
+                    Snackbar noIntenetSnackbar = Snackbar.make(
+                            findViewById(R.id.activity_article_list_coordinator_layout),
+                            getString(R.string.no_internet),
+                            Snackbar.LENGTH_SHORT
+                    );
+                    View view = noIntenetSnackbar.getView();
+                    TextView snackBarTextView =
+                            (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+                    snackBarTextView.setTextColor(Color.RED);
+                    noIntenetSnackbar.show();
+                    mIsRefreshing = false;
+                    mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
+                }
+            }
+        });
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mColumnCount = getResources().getInteger(R.integer.list_column_count);

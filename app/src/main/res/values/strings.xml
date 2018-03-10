@@ -9,7 +9,9 @@
 
     <string name="up">Up</string>
 
-
     <!--String to be used for shared element transitions-->
     <string name="transition_name">transition</string>
+
+    <!--String to be used to indicate that Internet connectivity is not available-->
+    <string name="no_internet">No Internet connection, data not available!</string>
 </resources>

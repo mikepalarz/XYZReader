@@ -5,7 +5,7 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?selectableItemBackground"
-    android:elevation="@dimen/card_view_resting_elevation"
+    app:cardElevation="@dimen/card_view_resting_elevation"
     android:translationZ="@dimen/card_view_response_elevation">
 
     <LinearLayout

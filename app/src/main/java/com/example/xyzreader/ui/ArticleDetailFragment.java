@@ -242,8 +242,8 @@ public class ArticleDetailFragment extends Fragment implements
             return;
         }
 
-        TextView titleView = (TextView) mRootView.findViewById(R.id.article_title);
-        TextView bylineView = (TextView) mRootView.findViewById(R.id.article_byline);
+        final TextView titleView = (TextView) mRootView.findViewById(R.id.article_title);
+        final TextView bylineView = (TextView) mRootView.findViewById(R.id.article_byline);
 
         /*
          A LinkMovementMethod is applied to the byline so that any links contained within this
@@ -282,7 +282,11 @@ public class ArticleDetailFragment extends Fragment implements
 
             }
 
-            bodyView.setText(mCursor.getString(ArticleLoader.Query.BODY));
+            bodyView.setText(Html.fromHtml(
+                    mCursor.getString(ArticleLoader.Query.BODY)
+                        .replaceAll("\r\n\r\n", "<br/><br/>")
+                    )
+            );
 
             // This is where the image is loaded.
             ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
@@ -291,8 +295,44 @@ public class ArticleDetailFragment extends Fragment implements
                         public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
                             Bitmap bitmap = imageContainer.getBitmap();
                             if (bitmap != null) {
-                                Palette p = Palette.generate(bitmap, 12);
-                                mMutedColor = p.getVibrantColor(0xFF333333);
+                                /*
+                                We generate our Palette asynchronously so that we're not causing
+                                any unnecessary delays on the UI thread. We then use the Palette
+                                to set the background of the meta bar as well as the title and
+                                byline text color.
+                                 */
+                                Palette
+                                        .from(bitmap)
+                                        .maximumColorCount(16)
+                                        .generate(new Palette.PaletteAsyncListener() {
+                                    @Override
+                                    public void onGenerated(Palette palette) {
+
+                                        /*
+                                        We create a Swatch instance so that we can dynamically
+                                        adjust the color the title and byline text.
+                                         */
+                                        Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
+
+                                        /*
+                                        As long as we have a valid swatch, we adjust the title and
+                                        byline text color.
+                                         */
+                                        if (vibrantSwatch != null) {
+                                            mMutedColor = vibrantSwatch.getRgb();
+                                            titleView.setTextColor(vibrantSwatch.getTitleTextColor());
+                                            bylineView.setTextColor(vibrantSwatch.getTitleTextColor());
+                                        }
+                                        // Otherwise, we'll just adjust the color of the meta bar BG
+                                        else {
+                                            mMutedColor = palette.getVibrantColor(0xFF333333);
+                                        }
+
+                                        // This is where we set the background color of the meta bar
+                                        mRootView.findViewById(R.id.fragment_article_details_meta_bar)
+                                                .setBackgroundColor(mMutedColor);
+                                    }
+                                });
                                 mPhotoView.setImageBitmap(imageContainer.getBitmap());
 
                                 /*
@@ -313,10 +353,6 @@ public class ArticleDetailFragment extends Fragment implements
                                         }
                                     });
                                 }
-
-                                // This is where we set the background color of the meta bar
-                                mRootView.findViewById(R.id.fragment_article_details_meta_bar)
-                                        .setBackgroundColor(mMutedColor);
                             }
                         }
 

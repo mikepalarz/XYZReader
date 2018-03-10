@@ -9,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.RemoteException;
+import android.support.design.widget.Snackbar;
 import android.text.format.Time;
 import android.util.Log;
 
@@ -64,21 +65,10 @@ public class UpdaterService extends IntentService {
                 ContentValues values = new ContentValues();
                 JSONObject object = array.getJSONObject(i);
 
-                /*
-                The text which is obtained from the JSON data is adjusted slightly by removing some of
-                the escape characters which are directly contained within the text. This adjustment
-                is done so that the body text is formatted in a nice, presentable way. It also ensures
-                that we are displaying 40-60 characters per line, which is the range recommended by
-                the MD spec for typography:
-    
-                 https://material.io/guidelines/style/typography.html#typography-other-typographic-guidelines
-                 */
-                String bodyText = Utilities.sanitizeBodyText(object.getString("body"));
-
                 values.put(ItemsContract.Items.SERVER_ID, object.getString("id" ));
                 values.put(ItemsContract.Items.AUTHOR, object.getString("author" ));
                 values.put(ItemsContract.Items.TITLE, object.getString("title" ));
-                values.put(ItemsContract.Items.BODY, bodyText);
+                values.put(ItemsContract.Items.BODY, object.getString("body"));
                 values.put(ItemsContract.Items.THUMB_URL, object.getString("thumb" ));
                 values.put(ItemsContract.Items.PHOTO_URL, object.getString("photo" ));
                 values.put(ItemsContract.Items.ASPECT_RATIO, object.getString("aspect_ratio" ));
